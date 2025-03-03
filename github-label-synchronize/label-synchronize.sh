@@ -3,11 +3,19 @@
 # GitHub Label
 # github-label-sync [token] [json 위치] [user-name]/[repository-name]
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+CYAN='\033[0;36m'
+BOLD='\033[1m'
+NC='\033[0m'
+
 prompt_for_input() {
-  echo "Input for github-label-sync:"
+  echo -e "${BOLD}Input for github-label-sync:${NC}"
   
   if [ -z "$1" ]; then
-    echo -n "GitHub access token: "
+    echo -n -e "${CYAN}GitHub access token: ${NC}"
     read -s ACCESS_TOKEN
     echo ""
   else
@@ -15,21 +23,21 @@ prompt_for_input() {
   fi
   
   if [ -z "$2" ]; then
-    echo -n "Path to labels JSON file: "
+    echo -n -e "${CYAN}Path to labels JSON file: ${NC}"
     read LABELS_FILE
   else
     LABELS_FILE=$2
   fi
   
   if [ -z "$3" ]; then
-    echo -n "GitHub repository (format: user/repo): "
+    echo -n -e "${CYAN}GitHub repository (format: user/repo): ${NC}"
     read REPOSITORY
   else
     REPOSITORY=$3
   fi
   
   if [ -z "$4" ]; then
-    echo -n "Dry run mode? (y/n): "
+    echo -n -e "${CYAN}Dry run mode? (y/n): ${NC}"
     read DRY_RUN_CHOICE
     if [[ $DRY_RUN_CHOICE == [yY] ]]; then
         DRY_RUN=true
@@ -41,7 +49,7 @@ prompt_for_input() {
   fi
 
   if [ -z "$5" ]; then
-    echo -n "Do you want to keep the existing labels (y/n): "
+    echo -n -e "${CYAN}Do you want to keep the existing labels (y/n): ${NC}"
     read KEEP_LABELS_CHOICE
     if [[ $KEEP_LABELS_CHOICE == [yY] ]]; then
         ALLOW_ADDED_LABELS=true
@@ -55,12 +63,12 @@ prompt_for_input() {
 
 check_dependencies() {
   if ! command -v jq &> /dev/null; then
-    echo "Error: jq command not found, please install with ‘apt-get install jq’ or ‘brew install jq’"
+    echo -e "${RED}Error: jq command not found, please install with 'apt-get install jq' or 'brew install jq'${NC}"
     exit 1
   fi
   
   if ! command -v curl &> /dev/null; then
-    echo "Error: The curl command was not found, please install with ‘apt-get install curl’."
+    echo -e "${RED}Error: The curl command was not found, please install with 'apt-get install curl'.${NC}"
     exit 1
   fi
 }
@@ -71,38 +79,39 @@ main() {
   prompt_for_input "$1" "$2" "$3" "$4" "$5"
   
   echo ""
-  echo "==================Settings Summary=================="
-  echo "Access Token: [hidden]"
-  echo "Label File  : $LABELS_FILE"
-  echo "Repository  : $REPOSITORY"
-  echo "Dry Run     : $DRY_RUN"
-  echo "Keep labels : $ALLOW_ADDED_LABELS"
-  echo "===================================================="
+  echo -e "${BOLD}${BLUE}==================Settings Summary==================${NC}"
+  echo -e "${BOLD}Access Token:${NC} [hidden]"
+  echo -e "${BOLD}Label File  :${NC} ${YELLOW}$LABELS_FILE${NC}"
+  echo -e "${BOLD}Repository  :${NC} ${YELLOW}$REPOSITORY${NC}"
+  echo -e "${BOLD}Dry Run     :${NC} ${YELLOW}$DRY_RUN${NC}"
+  echo -e "${BOLD}Keep labels :${NC} ${YELLOW}$ALLOW_ADDED_LABELS${NC}"
+  echo -e "${BOLD}${BLUE}====================================================${NC}"
   echo
   
-  echo -n "Do you want to proceed? (y/n): "
+  echo -n -e "${CYAN}Do you want to proceed? (y/n): ${NC}"
   read CONFIRM
   if [[ ! $CONFIRM == [yY] ]]; then
-    echo "The synchronization has been canceled."
+    echo -e "${YELLOW}The synchronization has been canceled.${NC}"
     exit 0
   fi
   
-  echo "Starting label synchronization..."
+  echo -e "${BLUE}Starting label synchronization...${NC}"
   
   OUTPUT=$(./github-label-sync.sh "$ACCESS_TOKEN" "$LABELS_FILE" "$REPOSITORY" "$DRY_RUN" "$ALLOW_ADDED_LABELS")
+  echo $OUTPUT
   
   while IFS= read -r line; do
     if [[ "$line" == "update:"* ]]; then
       LABEL=${line#update:}
-      echo "Update label: $LABEL"
+      echo -e "${YELLOW}Update label: ${BOLD}$LABEL${NC}"
     elif [[ "$line" == "create:"* ]]; then
       LABEL=${line#create:}
-      echo "Create label: $LABEL"
+      echo -e "${GREEN}Create label: ${BOLD}$LABEL${NC}"
     elif [[ "$line" == "delete:"* ]]; then
       LABEL=${line#delete:}
-      echo "Delete label: $LABEL"
+      echo -e "${RED}Delete label: ${BOLD}$LABEL${NC}"
     elif [[ "$line" == "done" ]]; then
-      echo "Label synchronization is done!"
+      echo -e "${GREEN}${BOLD}Label synchronization is done!${NC}"
     fi
   done <<< "$OUTPUT"
 }
