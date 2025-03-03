@@ -65,5 +65,26 @@ for row in $(echo "${NEW_LABELS}" | jq -r '.[] | @base64'); do
     fi
 done
 
+if [ "$ALLOW_ADDED_LABELS" = false ]; then
+    for row in $(echo "${CURRENT_LABELS}" | jq -r '.[] | @base64'); do
+        LABEL=$(echo "${row}" | base64 --decode)
+        CURRENT_NAME=$(echo "${LABEL}" | jq -r '.name')
+        FOUND=$(echo "${NEW_LABELS}" | jq -r --arg name "$CURRENT_NAME" '.[] | select(.name == $name) | .name')
+        
+        if [ -z "$FOUND" ]; then
+            echo "delete:$CURRENT_NAME"
+            
+            if [ "$DRY_RUN" = false ]; then
+                ENCODED_NAME=$(echo "$CURRENT_NAME" | sed 's/ /%20/g' | sed 's/#/%23/g')
+                
+                curl -s -X DELETE \
+                    -H "Authorization: token $ACCESS_TOKEN" \
+                    -H "Accept: application/vnd.github.v3+json" \
+                    "https://api.github.com/repos/$REPOSITORY/labels/$ENCODED_NAME" > /dev/null
+            fi
+        fi
+    done
+fi
+
 echo "done"
 exit 0
