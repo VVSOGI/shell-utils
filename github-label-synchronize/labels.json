@@ -1,0 +1,32 @@
+[
+  {
+    "name": "bug",
+    "color": "d73a4a",
+    "description": "Something isn't working"
+  },
+  {
+    "name": "documentation",
+    "color": "0075ca",
+    "description": "Improvements or additions to documentation"
+  },
+  {
+    "name": "feature",
+    "color": "bfdadc",
+    "description": "New feature"
+  },
+  {
+    "name": "question",
+    "color": "d876e3",
+    "description": "Further information is requested"
+  },
+  {
+    "name": "reference",
+    "color": "137190",
+    "description": "Good reference"
+  },
+  {
+    "name": "schedule",
+    "color": "1087cc",
+    "description": "This issue relevant with project schedule."
+  }
+]
