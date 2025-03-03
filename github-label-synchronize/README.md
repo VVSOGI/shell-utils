@@ -11,8 +11,8 @@ bash ./label-synchronize.sh
 ## Arguments.
 
 - accesstoken: GitHub personal access token
-- LabelFile\*\*: Path to JSON file with label definitions
-- repo\*\*: GitHub repository (format: username/repo)
+- LabelFile: Path to JSON file with label definitions
+- repo: GitHub repository (format: username/repo)
 - Dry run: Preview only without applying changes (true/false)
 - keep-labels: keep existing labels (true/false)
 
