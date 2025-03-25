@@ -8,7 +8,7 @@ Bash script to synchronize issue labels from a GitHub repository with a JSON fil
 bash ./label-synchronize.sh
 ```
 
-## Arguments.
+## Arguments
 
 - accesstoken: GitHub personal access token
 - LabelFile: Path to JSON file with label definitions
