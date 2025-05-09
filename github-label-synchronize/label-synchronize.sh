@@ -37,7 +37,7 @@ prompt_for_input() {
   fi
   
   if [ -z "$4" ]; then
-    echo -n -e "${CYAN}Dry run mode? (y/n): ${NC}"
+    echo -n -e "${CYAN}Dry run mode? (If you select Yes, it won't actually work.) (y/n): ${NC}"
     read DRY_RUN_CHOICE
     if [[ $DRY_RUN_CHOICE == [yY] ]]; then
         DRY_RUN=true
