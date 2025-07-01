@@ -30,7 +30,7 @@ prompt_for_input() {
   fi
   
   if [ -z "$3" ]; then
-    echo -n -e "${CYAN}GitHub repository (format: user/repo): ${NC}"
+    echo -n -e "${CYAN}GitHub repository (format: 'user/repo' ${RED}NOT ALL URL LIKE 'https://github.com/VVSOGI/shell-utils'${CYAN}): ${NC}"
     read REPOSITORY
   else
     REPOSITORY=$3
