@@ -11,6 +11,9 @@ CYAN='\033[0;36m'
 BOLD='\033[1m'
 NC='\033[0m'
 
+    LABELS_FILE="./labels.json"
+
+
 prompt_for_input() {
   echo -e "${BOLD}Input for github-label-sync:${NC}"
   
@@ -23,20 +26,13 @@ prompt_for_input() {
   fi
   
   if [ -z "$2" ]; then
-    echo -n -e "${CYAN}Path to labels JSON file: ${NC}"
-    read LABELS_FILE
-  else
-    LABELS_FILE=$2
-  fi
-  
-  if [ -z "$3" ]; then
     echo -n -e "${CYAN}GitHub repository (format: 'user/repo' ${RED}NOT ALL URL LIKE 'https://github.com/VVSOGI/shell-utils'${CYAN}): ${NC}"
     read REPOSITORY
   else
-    REPOSITORY=$3
+    REPOSITORY=$2
   fi
   
-  if [ -z "$4" ]; then
+  if [ -z "$3" ]; then
     echo -n -e "${CYAN}Dry run mode? (If you select Yes, it won't actually work.) (y/n): ${NC}"
     read DRY_RUN_CHOICE
     if [[ $DRY_RUN_CHOICE == [yY] ]]; then
@@ -45,10 +41,10 @@ prompt_for_input() {
         DRY_RUN=false
     fi
   else
-    DRY_RUN=$4
+    DRY_RUN=$3
   fi
 
-  if [ -z "$5" ]; then
+  if [ -z "$4" ]; then
     echo -n -e "${CYAN}Do you want to keep the existing labels (y/n): ${NC}"
     read KEEP_LABELS_CHOICE
     if [[ $KEEP_LABELS_CHOICE == [yY] ]]; then
@@ -57,7 +53,7 @@ prompt_for_input() {
         ALLOW_ADDED_LABELS=false
     fi
   else
-    ALLOW_ADDED_LABELS=$5
+    ALLOW_ADDED_LABELS=$4
   fi
 }
 
@@ -76,7 +72,7 @@ check_dependencies() {
 main() {
   check_dependencies
   
-  prompt_for_input "$1" "$2" "$3" "$4" "$5"
+  prompt_for_input "$1" "$2" "$3" "$4"
   
   echo ""
   echo -e "${BOLD}${BLUE}==================Settings Summary==================${NC}"
@@ -116,4 +112,4 @@ main() {
   done <<< "$OUTPUT"
 }
 
-main "$1" "$2" "$3" "$4" "$5"
+main "$1" "$2" "$3" "$4"

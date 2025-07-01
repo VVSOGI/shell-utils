@@ -56,6 +56,8 @@ for row in $(echo "${NEW_LABELS}" | jq -r '.[] | @base64'); do
     DESCRIPTION=$(echo "${LABEL}" | jq -r '.description // ""')
     EXISTING_LABEL=$(echo "${CURRENT_LABELS}" | jq -r --arg name "$NAME" '.[] | select(.name == $name)')
 
+
+
     if [ -n "$EXISTING_LABEL" ]; then
         echo -e "${YELLOW}update:$NAME${NC}"
         
